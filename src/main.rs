@@ -1,44 +1,90 @@
-use ggez::{Context, ContextBuilder, GameResult};
+use ggez::event;
 use ggez::graphics::{self, Color};
-use ggez::event::{self, EventHandler};
+use ggez::{Context, GameResult};
+use glam::*;
 
-fn main() {
-    // Make a Context.
-    let (mut ctx, event_loop) = ContextBuilder::new("pong-rs", "Tantatorn S")
-        .build()
-        .expect("aieee, could not create ggez context!");
-
-    // Create an instance of your event handler.
-    // Usually, you should provide it with the Context object to
-    // use when setting your game up.
-    let my_game = MyGame::new(&mut ctx);
-
-    // Run!
-    event::run(ctx, event_loop, my_game);
+fn main() -> GameResult {
+    let cb = ggez::ContextBuilder::new("pong_rs", "Tantatorn S");
+    let (ctx, event_loop) = cb.build()?;
+    let state = MainState::new()?;
+    event::run(ctx, event_loop, state)
 }
 
-struct MyGame {
-    // Your state here...
+struct MainState {
+    ball_state: BallState,
+    paddle_1_state: PaddleState,
+    paddle_2_state: PaddleState,
 }
 
-impl MyGame {
-    pub fn new(_ctx: &mut Context) -> MyGame {
-        // Load/create resources such as images here.
-        MyGame {
-            // ...
-        }
+struct BallState {
+    pos_x: f32,
+    pos_y: f32,
+    direction: BallDirection,
+}
+
+enum BallDirection {
+    NORTH,
+    SOUTH,
+    NORTHEAST,
+    NORTHWEST,
+    SOUTHEAST,
+    SOUTHWEST,
+}
+
+struct PaddleState {
+    pos_x: f32,
+    pos_y: f32,
+    direction: PaddleDirection,
+}
+
+enum PaddleDirection {
+    LEFT,
+    RIGHT,
+    STILL,
+}
+
+impl MainState {
+    fn new() -> GameResult<MainState> {
+        let s = MainState {
+            ball_state: BallState {
+                pos_x: 400.0,
+                pos_y: 280.0,
+                direction: BallDirection::NORTH,
+            },
+            paddle_1_state: PaddleState {
+                pos_x: 0.0,
+                pos_y: 380.0,
+                direction: PaddleDirection::STILL,
+            },
+            paddle_2_state: PaddleState {
+                pos_x: 0.0,
+                pos_y: 180.0,
+                direction: PaddleDirection::STILL,
+            },
+        };
+        Ok(s)
     }
 }
 
-impl EventHandler<ggez::GameError> for MyGame {
-    fn update(&mut self, _ctx: &mut Context) -> GameResult<()> {
-        // Update code here...
+impl event::EventHandler<ggez::GameError> for MainState {
+    fn update(&mut self, _ctx: &mut Context) -> GameResult {
         Ok(())
     }
 
-    fn draw(&mut self, ctx: &mut Context) -> GameResult<()> {
-        graphics::clear(ctx, Color::WHITE);
-        // Draw code here...
-        graphics::present(ctx)
+    fn draw(&mut self, ctx: &mut Context) -> GameResult {
+        graphics::clear(ctx, [0.1, 0.2, 0.3, 1.0].into());
+
+        let ball = graphics::Mesh::new_circle(
+            ctx,
+            graphics::DrawMode::fill(),
+            Vec2::new(0.0, 0.0),
+            40.0,
+            2.0,
+            Color::WHITE,
+        )?;
+        graphics::draw(ctx, &ball, (Vec2::new(self.ball_state.pos_x, self.ball_state.pos_y),))?;
+
+        graphics::present(ctx)?;
+        Ok(())
     }
 }
