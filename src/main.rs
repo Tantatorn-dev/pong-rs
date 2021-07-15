@@ -1,5 +1,5 @@
 use ggez::event;
-use ggez::graphics::{self, Color};
+use ggez::graphics::{self, Color, Rect};
 use ggez::{Context, GameResult};
 use glam::*;
 
@@ -12,8 +12,7 @@ fn main() -> GameResult {
 
 struct MainState {
     ball_state: BallState,
-    paddle_1_state: PaddleState,
-    paddle_2_state: PaddleState,
+    paddle_state: PaddleState,
 }
 
 struct BallState {
@@ -51,14 +50,9 @@ impl MainState {
                 pos_y: 280.0,
                 direction: BallDirection::NORTH,
             },
-            paddle_1_state: PaddleState {
-                pos_x: 0.0,
-                pos_y: 380.0,
-                direction: PaddleDirection::STILL,
-            },
-            paddle_2_state: PaddleState {
-                pos_x: 0.0,
-                pos_y: 180.0,
+            paddle_state: PaddleState {
+                pos_x: 300.0,
+                pos_y: 500.0,
                 direction: PaddleDirection::STILL,
             },
         };
@@ -78,11 +72,33 @@ impl event::EventHandler<ggez::GameError> for MainState {
             ctx,
             graphics::DrawMode::fill(),
             Vec2::new(0.0, 0.0),
-            40.0,
+            20.0,
             2.0,
             Color::WHITE,
         )?;
-        graphics::draw(ctx, &ball, (Vec2::new(self.ball_state.pos_x, self.ball_state.pos_y),))?;
+
+        let paddle_1 = graphics::Mesh::new_rectangle(
+            ctx,
+            graphics::DrawMode::fill(),
+            Rect::new(
+                self.paddle_state.pos_x,
+                self.paddle_state.pos_y,
+                200.0,
+                20.0,
+            ),
+            Color::RED,
+        )?;
+
+        graphics::draw(
+            ctx,
+            &ball,
+            (Vec2::new(self.ball_state.pos_x, self.ball_state.pos_y),),
+        )?;
+        graphics::draw(
+            ctx,
+            &paddle_1,
+            graphics::DrawParam::default(),
+        )?;
 
         graphics::present(ctx)?;
         Ok(())
