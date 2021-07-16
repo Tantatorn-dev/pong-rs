@@ -3,7 +3,14 @@ use ggez::graphics::{self, Color, Rect};
 use ggez::{Context, GameResult};
 use glam::*;
 
+#[path = "./objects/ball.rs"]
+mod ball;
+#[path = "./objects/paddle.rs"]
+mod paddle;
+
+
 fn main() -> GameResult {
+    
     let cb = ggez::ContextBuilder::new("pong_rs", "Tantatorn S");
     let (ctx, event_loop) = cb.build()?;
     let state = MainState::new()?;
@@ -11,49 +18,22 @@ fn main() -> GameResult {
 }
 
 struct MainState {
-    ball_state: BallState,
-    paddle_state: PaddleState,
-}
-
-struct BallState {
-    pos_x: f32,
-    pos_y: f32,
-    direction: BallDirection,
-}
-
-enum BallDirection {
-    NORTH,
-    SOUTH,
-    NORTHEAST,
-    NORTHWEST,
-    SOUTHEAST,
-    SOUTHWEST,
-}
-
-struct PaddleState {
-    pos_x: f32,
-    pos_y: f32,
-    direction: PaddleDirection,
-}
-
-enum PaddleDirection {
-    LEFT,
-    RIGHT,
-    STILL,
+    ball_state: ball::BallState,
+    paddle_state: paddle::PaddleState,
 }
 
 impl MainState {
     fn new() -> GameResult<MainState> {
         let s = MainState {
-            ball_state: BallState {
+            ball_state: ball::BallState {
                 pos_x: 400.0,
                 pos_y: 280.0,
-                direction: BallDirection::NORTH,
+                direction: ball::BallDirection::NORTH,
             },
-            paddle_state: PaddleState {
+            paddle_state: paddle::PaddleState {
                 pos_x: 300.0,
                 pos_y: 500.0,
-                direction: PaddleDirection::STILL,
+                direction: paddle::PaddleDirection::STILL,
             },
         };
         Ok(s)
