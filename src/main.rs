@@ -1,6 +1,7 @@
 use ggez::event;
 use ggez::graphics::{self, Color, Rect};
 use ggez::{Context, GameResult};
+use ggez::input::keyboard;
 use glam::*;
 
 #[path = "./objects/ball.rs"]
@@ -19,7 +20,7 @@ fn main() -> GameResult {
 
 struct MainState {
     ball_state: ball::BallState,
-    paddle_state: paddle::PaddleState,
+    paddle: paddle::Paddle,
 }
 
 impl MainState {
@@ -30,11 +31,7 @@ impl MainState {
                 pos_y: 280.0,
                 direction: ball::BallDirection::NORTH,
             },
-            paddle_state: paddle::PaddleState {
-                pos_x: 300.0,
-                pos_y: 500.0,
-                direction: paddle::PaddleDirection::STILL,
-            },
+            paddle: paddle::Paddle::new(300.0, 500.0, paddle::PaddleDirection::STILL) 
         };
         Ok(s)
     }
@@ -42,6 +39,15 @@ impl MainState {
 
 impl event::EventHandler<ggez::GameError> for MainState {
     fn update(&mut self, _ctx: &mut Context) -> GameResult {
+
+        if keyboard::is_key_pressed(_ctx, event::KeyCode::A) {
+            self.paddle.move_paddle(paddle::PaddleDirection::LEFT);
+        }
+
+        if keyboard::is_key_pressed(_ctx, event::KeyCode::D) {
+            self.paddle.move_paddle(paddle::PaddleDirection::RIGHT);
+        }
+    
         Ok(())
     }
 
@@ -57,17 +63,7 @@ impl event::EventHandler<ggez::GameError> for MainState {
             Color::WHITE,
         )?;
 
-        let paddle_1 = graphics::Mesh::new_rectangle(
-            ctx,
-            graphics::DrawMode::fill(),
-            Rect::new(
-                self.paddle_state.pos_x,
-                self.paddle_state.pos_y,
-                200.0,
-                20.0,
-            ),
-            Color::RED,
-        )?;
+        let paddle_1 = self.paddle.get_mesh(ctx)?;
 
         graphics::draw(
             ctx,
