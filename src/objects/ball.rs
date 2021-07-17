@@ -2,9 +2,9 @@ use ggez::{Context, GameResult, graphics::{self, Color, Mesh, Rect}};
 use glam::Vec2;
 
 pub struct Ball {
-    pos_x: f32,
-    pos_y: f32,
-    direction: BallDirection,
+    pub pos_x: f32,
+    pub pos_y: f32,
+    pub direction: BallDirection,
 }
 
 pub struct BallDirection {

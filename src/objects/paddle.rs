@@ -3,9 +3,9 @@ use ggez::{Context, GameResult};
 use glam::*;
 
 pub struct Paddle {
-    pos_x: f32,
-    pos_y: f32,
-    direction: PaddleDirection,
+    pub pos_x: f32,
+    pub pos_y: f32,
+    pub direction: PaddleDirection,
 }
 
 pub enum PaddleDirection {
@@ -15,6 +15,7 @@ pub enum PaddleDirection {
 }
 
 impl Paddle {
+
     pub fn new(pos_x: f32, pos_y: f32, direction: PaddleDirection) -> Self {
         return Paddle {
             pos_x: pos_x,

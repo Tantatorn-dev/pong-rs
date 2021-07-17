@@ -1,14 +1,18 @@
 use ball::BallDirection;
+use collision::check_collision;
 use ggez::event;
 use ggez::graphics::{self, Color, Rect};
 use ggez::input::keyboard;
 use ggez::{Context, GameResult};
 use glam::*;
+use paddle::PaddleDirection;
 
 #[path = "./objects/ball.rs"]
 mod ball;
 #[path = "./objects/paddle.rs"]
 mod paddle;
+#[path = "./tools/collision.rs"]
+mod collision;
 
 fn main() -> GameResult {
     let cb = ggez::ContextBuilder::new("pong_rs", "Tantatorn S");
@@ -42,11 +46,13 @@ impl event::EventHandler<ggez::GameError> for MainState {
 
         if keyboard::is_key_pressed(_ctx, event::KeyCode::A) {
             self.paddle.move_paddle(paddle::PaddleDirection::LEFT);
+        } else if keyboard::is_key_pressed(_ctx, event::KeyCode::D) {
+            self.paddle.move_paddle(paddle::PaddleDirection::RIGHT);
+        } else {
+            self.paddle.direction = PaddleDirection::STILL;
         }
 
-        if keyboard::is_key_pressed(_ctx, event::KeyCode::D) {
-            self.paddle.move_paddle(paddle::PaddleDirection::RIGHT);
-        }
+        check_collision(&mut self.ball, &mut self.paddle);
 
         Ok(())
     }
