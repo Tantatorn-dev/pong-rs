@@ -34,9 +34,11 @@ impl Paddle {
 
     pub fn move_paddle(&mut self, direction: PaddleDirection) {
 
+        self.direction = direction;
+
         self.check_boundary();
 
-        match direction {
+        match self.direction {
             PaddleDirection::LEFT => self.pos_x -= 5.0,
             PaddleDirection::RIGHT => self.pos_x += 5.0,
             PaddleDirection::STILL => (),
@@ -46,7 +48,7 @@ impl Paddle {
     fn check_boundary(&mut self) {
         if self.pos_x <= 0.0 {
             self.pos_x += 5.0;
-        } else if self.pos_x >= 500.0 {
+        } else if self.pos_x >= 600.0 {
             self.pos_x -= 5.0;
         }
     }
