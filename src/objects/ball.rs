@@ -7,13 +7,19 @@ pub struct Ball {
     direction: BallDirection,
 }
 
-pub enum BallDirection {
-    NORTH,
-    SOUTH,
-    NORTHEAST,
-    NORTHWEST,
-    SOUTHEAST,
-    SOUTHWEST,
+pub struct BallDirection {
+    pub v_direction: VerticalDirection,
+    pub h_direction: HorizontalDirection,
+}
+
+pub enum VerticalDirection {
+    UP,
+    DOWN,
+}
+pub enum HorizontalDirection {
+    LEFT,
+    RIGHT,
+    STILL,
 }
 
 impl Ball {
@@ -36,5 +42,20 @@ impl Ball {
             Color::WHITE,
         );
 	}
+
+    pub fn move_ball(&mut self) {
+
+        match self.direction.v_direction {
+            VerticalDirection::UP => self.pos_y -= 5.0,
+            VerticalDirection::DOWN => self.pos_y += 5.0,
+        }
+
+        match self.direction.h_direction {
+            HorizontalDirection::LEFT => self.pos_x -= 5.0,
+            HorizontalDirection::RIGHT => self.pos_x += 5.0,
+            HorizontalDirection::STILL => (),
+        }
+
+    }
 
 }

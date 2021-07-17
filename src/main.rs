@@ -1,3 +1,4 @@
+use ball::BallDirection;
 use ggez::event;
 use ggez::graphics::{self, Color, Rect};
 use ggez::input::keyboard;
@@ -24,7 +25,10 @@ struct MainState {
 impl MainState {
     fn new() -> GameResult<MainState> {
         let s = MainState {
-            ball: ball::Ball::new(400.0, 280.0, ball::BallDirection::SOUTH),
+            ball: ball::Ball::new(400.0, 280.0, BallDirection{
+                h_direction: ball::HorizontalDirection::STILL,
+                v_direction: ball::VerticalDirection::DOWN,
+            }),
             paddle: paddle::Paddle::new(300.0, 500.0, paddle::PaddleDirection::STILL),
         };
         Ok(s)
@@ -33,6 +37,8 @@ impl MainState {
 
 impl event::EventHandler<ggez::GameError> for MainState {
     fn update(&mut self, _ctx: &mut Context) -> GameResult {
+
+        self.ball.move_ball();
 
         if keyboard::is_key_pressed(_ctx, event::KeyCode::A) {
             self.paddle.move_paddle(paddle::PaddleDirection::LEFT);
@@ -56,9 +62,14 @@ impl event::EventHandler<ggez::GameError> for MainState {
             &ball,
             graphics::DrawParam::default(),
         )?;
-        graphics::draw(ctx, &paddle_1, graphics::DrawParam::default())?;
+        graphics::draw(
+            ctx, 
+            &paddle_1, 
+            graphics::DrawParam::default()
+        )?;
 
         graphics::present(ctx)?;
+
         Ok(())
     }
 }
