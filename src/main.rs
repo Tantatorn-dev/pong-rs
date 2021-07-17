@@ -1,10 +1,9 @@
 use ball::BallDirection;
 use collision::check_collision;
 use ggez::event;
-use ggez::graphics::{self, Color, Rect};
+use ggez::graphics::{self};
 use ggez::input::keyboard;
 use ggez::{Context, GameResult};
-use glam::*;
 use paddle::PaddleDirection;
 
 #[path = "./objects/ball.rs"]

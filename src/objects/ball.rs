@@ -1,4 +1,4 @@
-use ggez::{Context, GameResult, graphics::{self, Color, Mesh, Rect}};
+use ggez::{Context, GameResult, graphics::{self, Color, Mesh}};
 use glam::Vec2;
 
 pub struct Ball {
